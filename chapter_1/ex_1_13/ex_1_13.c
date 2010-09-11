@@ -3,13 +3,13 @@
 #define  MAXHIST  20  // max length of histogram
 #define  MAXLEN  15  // max length of a word
 
-// print a histogram of the lengths of words in input.
-// this program print a horizontal version.
+void print_horizontal_hist(int word_lens[], int max_value, int overflow);
+void print_vertical_hist(int word_lens[], int max_value, int overflow);
 
+// print a histogram of the lengths of words in input.
 int main() {
   int current_char;
   int word_len = 0;  // length of a word
-  int bar_len = 0;  // length of each bar
   int overflow = 0;  // number of words exceed the MAXLEN
   int state = 0;
   int word_lens[MAXLEN];
@@ -44,7 +44,12 @@ int main() {
       max_value = word_lens[i];
     }
   }
-  //  Print the histogram
+  print_horizontal_hist(word_lens, max_value, overflow);
+  print_vertical_hist(word_lens, max_value, overflow);
+}
+//  Print the horizontal histogram
+void print_horizontal_hist(int word_lens[], int max_value, int overflow) {
+  int bar_len = 0;  // length of each bar
   for (int i = 1; i < MAXLEN; ++i) {
     printf("%5d - %5d : ", i, word_lens[i]);
     if (word_lens[i] > 0) {
@@ -61,6 +66,30 @@ int main() {
     putchar('\n');
   }
   if (overflow > 0) {
+    printf("%d words >= %d\n", overflow, MAXLEN);
+  }
+}
+// Print the vertical histogram
+void print_vertical_hist(int word_lens[], int max_value, int overflow) {
+  for (int i = MAXHIST; i > 0; --i) {
+    for (int j = 1; j < MAXLEN; ++j) {
+      if (word_lens[j] * MAXHIST / max_value >= i) {
+        printf(" * ");
+      } else {
+        printf("   ");
+      }
+    }
+    putchar('\n');
+  }
+  for (int i = 1; i < MAXLEN; ++i) {
+    printf("%2d ", i);
+  }
+  putchar('\n');
+  for (int i = 1; i < MAXLEN; ++i) {
+    printf("%2d ", word_lens[i]);
+  }
+  putchar('\n');
+  if(overflow > 0) {
     printf("%d words >= %d\n", overflow, MAXLEN);
   }
 }
