@@ -1,8 +1,9 @@
 #include <stdio.h>
 
-double celsius(double fahr);
+// converts fahr into ceisius
+double Ceisius(double fahr);
 
-// print Fahrenheit - Ceisius table for fahr = 0,20, ... ,300
+// prints Fahrenheit - Ceisius table for fahr = 0,20, ... ,300
 int main() {
   int lower = 0;
   int upper = 300;
@@ -10,13 +11,12 @@ int main() {
   double fahr = lower;
 
   while (fahr <= upper) {
-    printf("%3.0f %6.1f\n", fahr, celsius(fahr));
+    printf("%3.0f %6.1f\n", fahr, Ceisius(fahr));
     fahr += step;
   }
   return 0;
 }
 
-// convert fahr into celsius
-double celsius(double fahr) {
+double Ceisius(double fahr) {
   return (5.0 / 9.0) * (fahr - 32.0);
 }

@@ -8,7 +8,7 @@ int main() {
   double fahr = lower;
   double celsius;
 
-  printf("Fahr  Celsius\n");	// The title of table
+  printf("Fahr  Celsius\n");  // The title of table
   while (fahr <= upper) {
     celsius = (5.0 / 9.0) * (fahr - 32.0);
     printf("%3.0f   %6.1f\n", fahr, celsius);

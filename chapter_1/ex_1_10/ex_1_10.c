@@ -1,26 +1,22 @@
 #include <stdio.h>
 
-// escape tabs and backspaces with visible characters
+// escape tabs and backspaces with backslashes
 int main() {
   int current_char;
 
   while ((current_char = getchar()) != EOF) {
     switch (current_char) {
-      case '\t': {
+      case '\t':
         printf("\\t");
         break;
-      }
-      case '\b': {
+      case '\b':
         printf("\\b");
         break;
-      }
-      case '\\': {
+      case '\\':
         printf("\\\\");
         break;
-      }
-      default: {
+      default:
         putchar(current_char);
-      }
     }
   }
   return 0;

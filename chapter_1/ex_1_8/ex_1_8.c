@@ -9,19 +9,16 @@ int main() {
 
   while ((c = getchar()) != EOF) {
     switch (c) {
-      case ' ': {
+      case ' ':
          ++blanks;
          break;
-      }
-      case '\t': {
+      case '\t':
         ++tabs;
         break;
-      }
-      case '\b': {
+      case '\b':
         ++newlines;
         break;
-      }
-      default: {}
+      default:
     }
   }
   printf("blanks: %d, tabs: %d, newlines: %d\n", blanks, tabs, newlines);

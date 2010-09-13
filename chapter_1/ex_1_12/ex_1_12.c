@@ -1,21 +1,41 @@
 #include <stdio.h>
 
-// print input one word pre line
+enum ParserState {
+  kStateOtherCharacters,
+  kStateWhiteSpace
+};
+
+// prints input one word pre line
 int main() {
   int current_char;
-  int state = 0;  // status flag
+  enum ParserState state = kStateOtherCharacters;
 
   while ((current_char = getchar()) != EOF) {
-    if (current_char == ' ' || current_char == '\n' || current_char == '\t') {
-      if (state == 1) {
-        putchar('\n');  // finish a word
-        state = 0;
-      }
-    } else if (state == 0) {
-      state = 1;
-      putchar(current_char);
-    } else {
-      putchar(current_char);
+    switch (state) {
+      case kStateOtherCharacters:
+        switch (current_char) {
+          case ' ':
+          case '\n':
+          case '\t':
+            putchar('\n');
+            state = kStateWhiteSpace;
+            break;
+         default:
+           putchar(current_char);
+        }
+        break;
+      case kStateWhiteSpace:
+        switch (current_char) {
+          case ' ':
+          case '\n':
+          case '\t':
+            break;
+          default:
+            state = kStateOtherCharacters;
+            putchar(current_char);
+        }
+        break;
+      default: {}
     }
   }
   return 0;
