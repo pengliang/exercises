@@ -10,8 +10,8 @@ int main() {
   while ((c = getchar()) != EOF) {
     switch (c) {
       case ' ':
-         ++blanks;
-         break;
+        ++blanks;
+        break;
       case '\t':
         ++tabs;
         break;

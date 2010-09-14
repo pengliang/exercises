@@ -1,32 +1,45 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_HIST_LENGTH 20
-#define MAX_WORD_LENGTH 15
+const int MAX_HIST_LENGTH = 20;
+const int MAX_WORD_LENGTH = 15;
 
 enum ParserState {
   kStateOtherCharacters,
   kStateWhiteSpace
 };
 
+// Prints the horizontal histogram of the lengths of words in input.
+//
+// @param word_lens the array to store the number of words with length of
+// 1 2 3 ...(the array index + 1).
+// @param max_value the maximum value of the array word_lens.
+// @param overflow number of the words that exceed the MAX_WORD_LENGTH
 void PrintHorizontalHist(int word_lens[], int max_value, int overflow);
+
+// Print the vertical histogram of the lengths of words in input.
+//
+// @param word_lens the array to store the number of the words with length of
+// 1 2 3 ...(the array index + 1).
+// @param max_value the maximum value of the array word_lens.
+// @param overflow number of the words that exceed the MAX_WORD_LENGTH
 void PrintVerticalHist(int word_lens[], int max_value, int overflow);
 
-// prints a histogram of the lengths of words in input.
+// Prints a histogram of the lengths of words in input.
 int main() {
   int current_char;
   // Length of a word
   int word_len = 0;
-  // Number of words exceeds the MAX_WORD_LENGTH
+  // Number of the words that exceed the MAX_WORD_LENGTH
   int overflow = 0;
-  // Maximum value of world_lens[]
+  // Maximum value of word_lens[]
   int max_value = 0;
   enum ParserState state = kStateOtherCharacters;
   int word_lens[MAX_WORD_LENGTH];
 
   memset(word_lens, 0, sizeof(word_lens));
 
-  // statistics  word length
+  // Statistics word length
   while ((current_char = getchar()) != EOF) {
     switch (state) {
       case kStateOtherCharacters:
@@ -37,7 +50,7 @@ int main() {
             state = kStateWhiteSpace;
             if (word_len > 0) {
               if (word_len < MAX_WORD_LENGTH) {
-                ++word_lens[word_len];
+                ++word_lens[word_len-1];
               } else {
                 ++overflow;
               }
@@ -59,10 +72,9 @@ int main() {
             word_len = 1;
         }
         break;
-     default: {}
     }
   }
-  for (int i = 1; i < MAX_WORD_LENGTH; ++i) {
+  for (int i = 0; i < MAX_WORD_LENGTH; ++i) {
     if (word_lens[i] > max_value) {
       max_value = word_lens[i];
     }
@@ -75,10 +87,10 @@ void PrintHorizontalHist(int word_lens[], int max_value, int overflow) {
   // Length of each bar
   int bar_len = 0;
 
-  for (int i = 1; i < MAX_WORD_LENGTH; ++i) {
-    printf("%5d - %5d : ", i, word_lens[i]);
+  for (int i = 0; i < MAX_WORD_LENGTH; ++i) {
+    printf("%5d - %5d : ", i + 1, word_lens[i]);
     if (word_lens[i] > 0) {
-      if ((bar_len = word_lens[i] * MAX_HIST_LENGTH / max_value) <= 0) {
+      if ((bar_len = word_lens[i] * MAX_HIST_LENGTH / max_value) == 0) {
         bar_len = 1;
       }
     } else {
@@ -90,13 +102,13 @@ void PrintHorizontalHist(int word_lens[], int max_value, int overflow) {
     putchar('\n');
   }
   if (overflow > 0) {
-    printf("%d words >= %d\n", overflow, MAX_WORD_LENGTH);
+    printf("%d words > %d\n", overflow, MAX_WORD_LENGTH);
   }
 }
 
 void PrintVerticalHist(int word_lens[], int max_value, int overflow) {
   for (int i = MAX_HIST_LENGTH; i > 0; --i) {
-    for (int j = 1; j < MAX_WORD_LENGTH; ++j) {
+    for (int j = 0; j < MAX_WORD_LENGTH; ++j) {
       if (word_lens[j] * MAX_HIST_LENGTH / max_value >= i) {
         printf(" * ");
       } else {
@@ -105,15 +117,15 @@ void PrintVerticalHist(int word_lens[], int max_value, int overflow) {
     }
     putchar('\n');
   }
-  for (int i = 1; i < MAX_WORD_LENGTH; ++i) {
-    printf("%2d ", i);
+  for (int i = 0; i < MAX_WORD_LENGTH; ++i) {
+    printf("%2d ", i + 1);
   }
   putchar('\n');
-  for (int i = 1; i < MAX_WORD_LENGTH; ++i) {
+  for (int i = 0; i < MAX_WORD_LENGTH; ++i) {
     printf("%2d ", word_lens[i]);
   }
   putchar('\n');
   if(overflow > 0) {
-    printf("%d words >= %d\n", overflow, MAX_WORD_LENGTH);
+    printf("%d words > %d\n", overflow, MAX_WORD_LENGTH);
   }
 }

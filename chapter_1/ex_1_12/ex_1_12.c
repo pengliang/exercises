@@ -5,7 +5,7 @@ enum ParserState {
   kStateWhiteSpace
 };
 
-// prints input one word pre line
+// Prints input one word per line
 int main() {
   int current_char;
   enum ParserState state = kStateOtherCharacters;
@@ -35,7 +35,6 @@ int main() {
             putchar(current_char);
         }
         break;
-      default: {}
     }
   }
   return 0;
