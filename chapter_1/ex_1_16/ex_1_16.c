@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-const int MAX_LINE_LENGTH = 1000;
+const int kMaxLineLength = 1000;
 
 // Reads a line from the standard input. If the user's input is ended with
 // line-feed '\n', the line feed character is also included in the output.
@@ -18,21 +18,21 @@ int main() {
   int line_len = 0;
   // Maximum length so far
   int max_len = 0;
-  char line_buf[MAX_LINE_LENGTH];
-  char longest_line_buf[MAX_LINE_LENGTH];
+  char line_buf[kMaxLineLength];
+  char longest_line_buf[kMaxLineLength];
 
-  while ((line_len = Getline(line_buf,MAX_LINE_LENGTH)) > 0) {
+  while ((line_len = Getline(line_buf,kMaxLineLength)) > 0) {
     printf("%d ", line_len);
-    if(line_len > MAX_LINE_LENGTH) {
-      fwrite(line_buf, MAX_LINE_LENGTH, sizeof(char), stdout);
+    if(line_len > kMaxLineLength) {
+      fwrite(line_buf, kMaxLineLength, sizeof(char), stdout);
       putchar('\n');
     } else {
       fwrite(line_buf, line_len, sizeof(char), stdout);
     }
     if (line_len > max_len) {
       max_len = line_len;
-      if (max_len > MAX_LINE_LENGTH) {
-        memcpy(longest_line_buf, line_buf, MAX_LINE_LENGTH);
+      if (max_len > kMaxLineLength) {
+        memcpy(longest_line_buf, line_buf, kMaxLineLength);
       } else {
         memcpy(longest_line_buf, line_buf, max_len);
       }
@@ -40,8 +40,8 @@ int main() {
   }
   if (max_len > 0) {
     printf("longest line: %d ", max_len);
-    if (max_len > MAX_LINE_LENGTH) {
-      fwrite(longest_line_buf, MAX_LINE_LENGTH, sizeof(char), stdout);
+    if (max_len > kMaxLineLength) {
+      fwrite(longest_line_buf, kMaxLineLength, sizeof(char), stdout);
       putchar('\n');
     } else {
       fwrite(longest_line_buf, max_len, sizeof(char), stdout);
