@@ -12,18 +12,20 @@ enum ParserState {
 // Prints the horizontal histogram of the lengths of words in input.
 //
 // @param word_lens the array to store the number of words with length of
-// 1 2 3 ...(the array index + 1).
-// @param max_value the maximum value of the array word_lens.
+//                  1 2 3...(the array index +1)
+// @param max_number_of_length the max value of the number of words with some
+//                             length, also is the maximum value of word_lens.
 // @param overflow number of the words that exceed the kMaxWordLength
-void PrintHorizontalHist(int word_lens[], int max_value, int overflow);
+void PrintHorizontalHist(int word_lens[], int max_number_of_length, int overflow);
 
 // Print the vertical histogram of the lengths of words in input.
 //
 // @param word_lens the array to store the number of the words with length of
-// 1 2 3 ...(the array index + 1).
-// @param max_value the maximum value of the array word_lens.
+//                  1 2 3 ...(the array index + 1).
+// @param max_number_of_length the max value of the number of words with some
+//                             length, also is the maximum value of word_lens
 // @param overflow number of the words that exceed the kMaxWordLength
-void PrintVerticalHist(int word_lens[], int max_value, int overflow);
+void PrintVerticalHist(int word_lens[], int max_number_of_length, int overflow);
 
 // Prints a histogram of the lengths of words in input.
 int main() {
@@ -33,7 +35,7 @@ int main() {
   // Number of the words that exceed the kMaxWordLength
   int overflow = 0;
   // Maximum value of word_lens[]
-  int max_value = 0;
+  int max_number_of_length = 0;
   enum ParserState state = kStateOtherCharacters;
   int word_lens[kMaxWordLength];
 
@@ -72,25 +74,27 @@ int main() {
             word_len = 1;
         }
         break;
+      default:
+        break;
     }
   }
   for (int i = 0; i < kMaxWordLength; ++i) {
-    if (word_lens[i] > max_value) {
-      max_value = word_lens[i];
+    if (word_lens[i] > max_number_of_length) {
+      max_number_of_length = word_lens[i];
     }
   }
-  PrintHorizontalHist(word_lens, max_value, overflow);
-  PrintVerticalHist(word_lens, max_value, overflow);
+  PrintHorizontalHist(word_lens, max_number_of_length, overflow);
+  PrintVerticalHist(word_lens, max_number_of_length, overflow);
 }
 
-void PrintHorizontalHist(int word_lens[], int max_value, int overflow) {
+void PrintHorizontalHist(int word_lens[], int max_number_of_length, int overflow) {
   // Length of each bar
   int bar_len = 0;
 
   for (int i = 0; i < kMaxWordLength; ++i) {
     printf("%5d - %5d : ", i + 1, word_lens[i]);
     if (word_lens[i] > 0) {
-      if ((bar_len = word_lens[i] * kMaxHistLength / max_value) == 0) {
+      if ((bar_len = word_lens[i] * kMaxHistLength / max_number_of_length) == 0) {
         bar_len = 1;
       }
     } else {
@@ -106,10 +110,10 @@ void PrintHorizontalHist(int word_lens[], int max_value, int overflow) {
   }
 }
 
-void PrintVerticalHist(int word_lens[], int max_value, int overflow) {
+void PrintVerticalHist(int word_lens[], int max_number_of_length, int overflow) {
   for (int i = kMaxHistLength; i > 0; --i) {
     for (int j = 0; j < kMaxWordLength; ++j) {
-      if (word_lens[j] * kMaxHistLength / max_value >= i) {
+      if (word_lens[j] * kMaxHistLength / max_number_of_length >= i) {
         printf(" * ");
       } else {
         printf("   ");

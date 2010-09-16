@@ -1,34 +1,29 @@
 #include <stdio.h>
 #include <string.h>
+#include "../include/get_line.h"
 
 const int kMaxLineLength = 1000;
 
-// Reads a line from the standard input. If the user's input is ended with
-// line-feed '\n', the line feed character is also included in the output.
+// Prints the user's input in stdout.
 //
-// @param line_buffer the buffer to store the user's input
-// @param length the maximum length of the buffer
-// @return the length of the user's input
-int Getline(char line_buffer[], int length);
+// @param line_buf the buffer to store user's input.
+// @param line_length the length of user's input, note that it is not the
+//                    line_buf's length, but the actual length of user's input.
+void PrintLine(char line_buf[], int line_length);
 
 // Prints the length of arbitrary long input lines and as much as possible of
 // the text, and print the longest input line at last.
 int main() {
   // Current line length
   int line_len = 0;
-  // Maximum length so far
+  // Maximum length of user's input so far
   int max_len = 0;
   char line_buf[kMaxLineLength];
   char longest_line_buf[kMaxLineLength];
 
-  while ((line_len = Getline(line_buf,kMaxLineLength)) > 0) {
+  while ((line_len = GetLine(line_buf,kMaxLineLength)) > 0) {
     printf("%d ", line_len);
-    if(line_len > kMaxLineLength) {
-      fwrite(line_buf, kMaxLineLength, sizeof(char), stdout);
-      putchar('\n');
-    } else {
-      fwrite(line_buf, line_len, sizeof(char), stdout);
-    }
+    PrintLine(line_buf, line_len);
     if (line_len > max_len) {
       max_len = line_len;
       if (max_len > kMaxLineLength) {
@@ -40,32 +35,15 @@ int main() {
   }
   if (max_len > 0) {
     printf("longest line: %d ", max_len);
-    if (max_len > kMaxLineLength) {
-      fwrite(longest_line_buf, kMaxLineLength, sizeof(char), stdout);
-      putchar('\n');
-    } else {
-      fwrite(longest_line_buf, max_len, sizeof(char), stdout);
-    }
-  }
+    PrintLine(longest_line_buf, max_len);
+   }
   return 0;
 }
 
-int Getline(char line_buf[], int length) {
-  int current_char;
-  int i = 0, j = 0;
-  for (i = 0; (current_char = getchar()) != EOF && current_char != '\n'; ++i) {
-    if (i < length) {
-      line_buf[j] = current_char;
-      ++j;
+void PrintLine(char line_buf[], int line_length) {
+   if (line_length > kMaxLineLength) {
+      fwrite(line_buf, kMaxLineLength, sizeof(char), stdout);
+    } else {
+      fwrite(line_buf, line_length, sizeof(char), stdout);
     }
-  }
-  if (j < length - 1 && current_char == '\n') {
-    line_buf[j] = current_char;
-    ++j;
-    ++i;
-  }
-  if (j < length - 1) {
-    line_buf[j] = '\0';
-  }
-  return i;
 }

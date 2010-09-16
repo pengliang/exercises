@@ -35,6 +35,8 @@ int main() {
             putchar(current_char);
         }
         break;
+      default:
+        break;
     }
   }
   return 0;

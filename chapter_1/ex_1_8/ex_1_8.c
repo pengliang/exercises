@@ -19,6 +19,7 @@ int main() {
         ++newlines;
         break;
       default:
+        break;
     }
   }
   printf("blanks: %d, tabs: %d, newlines: %d\n", blanks, tabs, newlines);
