@@ -16,7 +16,8 @@ enum ParserState {
 // @param max_number_of_length the max value of the number of words with some
 //                             length, also is the maximum value of word_lens.
 // @param overflow number of the words that exceed the kMaxWordLength
-void PrintHorizontalHist(int word_lens[], int max_number_of_length, int overflow);
+void PrintHorizontalHist(int word_lens[], int max_number_of_length,
+                         int overflow);
 
 // Print the vertical histogram of the lengths of words in input.
 //
@@ -25,7 +26,8 @@ void PrintHorizontalHist(int word_lens[], int max_number_of_length, int overflow
 // @param max_number_of_length the max value of the number of words with some
 //                             length, also is the maximum value of word_lens
 // @param overflow number of the words that exceed the kMaxWordLength
-void PrintVerticalHist(int word_lens[], int max_number_of_length, int overflow);
+void PrintVerticalHist(int word_lens[], int max_number_of_length,
+                       int overflow);
 
 // Prints a histogram of the lengths of words in input.
 int main() {
@@ -87,14 +89,16 @@ int main() {
   PrintVerticalHist(word_lens, max_number_of_length, overflow);
 }
 
-void PrintHorizontalHist(int word_lens[], int max_number_of_length, int overflow) {
+void PrintHorizontalHist(int word_lens[], int max_number_of_length,
+                         int overflow) {
   // Length of each bar
   int bar_len = 0;
 
   for (int i = 0; i < kMaxWordLength; ++i) {
     printf("%5d - %5d : ", i + 1, word_lens[i]);
     if (word_lens[i] > 0) {
-      if ((bar_len = word_lens[i] * kMaxHistLength / max_number_of_length) == 0) {
+      bar_len = word_lens[i] * kMaxHistLength / max_number_of_length;
+      if (bar_len == 0) {
         bar_len = 1;
       }
     } else {
@@ -110,7 +114,8 @@ void PrintHorizontalHist(int word_lens[], int max_number_of_length, int overflow
   }
 }
 
-void PrintVerticalHist(int word_lens[], int max_number_of_length, int overflow) {
+void PrintVerticalHist(int word_lens[], int max_number_of_length,
+                       int overflow) {
   for (int i = kMaxHistLength; i > 0; --i) {
     for (int j = 0; j < kMaxWordLength; ++j) {
       if (word_lens[j] * kMaxHistLength / max_number_of_length >= i) {

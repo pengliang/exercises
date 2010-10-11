@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "../include/get_line.h"
+#include "utils/get_line.h"
 
 const int kMaxLineLength = 1000;
 
@@ -21,7 +21,7 @@ int main() {
   char line_buf[kMaxLineLength];
   char longest_line_buf[kMaxLineLength];
 
-  while ((line_len = GetLine(line_buf,kMaxLineLength)) > 0) {
+  while ((line_len = GetLine(line_buf, kMaxLineLength)) > 0) {
     printf("%d ", line_len);
     PrintLine(line_buf, line_len);
     if (line_len > max_len) {
@@ -42,8 +42,8 @@ int main() {
 
 void PrintLine(char line_buf[], int line_length) {
    if (line_length > kMaxLineLength) {
-      fwrite(line_buf, kMaxLineLength, sizeof(char), stdout);
+      fwrite(line_buf, sizeof(char), kMaxLineLength, stdout);
     } else {
-      fwrite(line_buf, line_length, sizeof(char), stdout);
+      fwrite(line_buf, sizeof(char), line_length, stdout);
     }
 }
