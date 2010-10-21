@@ -17,6 +17,7 @@ int main() {
     StringReverse(line_buf, line_length);
     fwrite(line_buf, line_length, sizeof(char), stdout);
   }
+  return 0;
 }
 
 void StringReverse(char *buffer, int buf_length) {
