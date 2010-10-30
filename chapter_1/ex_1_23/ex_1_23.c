@@ -1,44 +1,106 @@
 #include <stdio.h>
 
+enum ParserState {
+  // Parsing Normal code
+  kNormalCode,
+  // Found a leading slash '/'
+  kLeadingSlash,
+  // Found a trailing star '*' in a block comment
+  kTrailingStar,
+  // In a block comment, /* ... */
+  kInBlockComment,
+  // In a line comment, start with //
+  kInLineComment,
+  // IN a quotation, begin with ' or "
+  kInQuotes,
+  // FOund a escape in quotes
+  kEscapeInQuotes
+};
+
 // Remove all comments from a valid C program
 int main() {
-  // Current char and next char.
-  int cc,nc;
+  // Current char.
+  int c;
+  // Record the open quote char.
+  int quote_char;
+  enum ParserState state = kNormalCode;
 
-  while ((cc = getchar()) != EOF) {
-    switch (cc) {
-      case '/':
-        if ((nc = getchar()) == '*') {
-          // In /* ... */ style comments, move out.
-          nc = getchar();
-          while ((cc = nc) != '*' | (nc = getchar()) != '/')) {}
-        } else if (nc == '/') {
-          // In // style comments, last character is '\n'
-          while ((nc = getchar()) != '\n') {}
+  while ((c = getchar()) != EOF) {
+    switch (state) {
+      case kNormalCode:
+        switch (c) {
+          case '/':
+            state = kLeadingSlash;
+            break;
+          case '\'':
+          case '"':
+            state = kInQuotes;
+            quote_char = c;
+            putchar(c);
+            break;
+          default:
+            putchar(c);
+        }
+        break;
+      case kLeadingSlash:
+        switch (c) {
+          case '*':
+            state = kInBlockComment;
+            break;
+          case '/':
+            state = kInLineComment;
+            break;
+          default:
+            state = kNormalCode;
+            putchar('/');
+            putchar(c);
+        }
+        break;
+      case kInQuotes:
+        if (c == '\\') {
+          state = kEscapeInQuotes;
+        } else if (c == quote_char) {
+          state = kNormalCode;
+          putchar(c);
         } else {
-          putchar(cc);
-          if (nc != EOF) {
-            putchar(nc);
-          }
+          putchar(c);
         }
         break;
-      case '\'':
-      case '"':
-        // Echo characters within quotes, here is beginning.
-        putchar(cc);
-        while ((nc = getchar()) != cc) {
-          putchar(nc);
-          // ingore escape characters.
-          if (nc == '\\') {
-            putchar(getchar());
-          }
-        }
-        // Here is the end.
-        putchar(nc);
+      case kEscapeInQuotes:
+        putchar(c);
+        state = kInQuotes;
         break;
-      default:
-        // Not in comments and quotes, just output.
-        putchar(cc);
+      case kInBlockComment:
+        switch (c) {
+          case '*':
+            state = kTrailingStar;
+            break;
+          default:
+            break;
+        }
+        break;
+      case kTrailingStar:
+        switch (c) {
+          case '/':
+            state = kNormalCode;
+            break;
+          case '*':
+            state = kTrailingStar;
+          default:
+            state = kInBlockComment;
+            break;
+        }
+        break;
+      case kInLineComment:
+        switch (c) {
+          case '\n':
+            state = kNormalCode;
+            putchar('\n');
+            break;
+          default:
+            break;
+        }
+        break;
     }
   }
   return 0;

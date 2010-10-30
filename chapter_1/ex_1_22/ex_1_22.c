@@ -6,59 +6,132 @@
 const int kMaxCol = 10;
 const int kTabSize = 8;
 
-// Fold long input lines into multiple shorter lines
+enum PaserState {
+  kStart,
+  kNormalCode,
+  kLeadingBlank,
+  kTrailingBlank
+};
+
+// Fold long input lines into multiple shorter lines after the last non-blank
+// character occurs before the n-th column of input.
 int main() {
   // Current input char
   int c;
   // Position in the line, start from 0
   int pos = 0;
-
-  // Output line buffer
-  char *line = malloc(sizeof(*line) * kMaxCol);
-  memset(line, '\0', kMaxCol);
+  int trailing_spaces = 0;
+  int trailing_tabs = 0;
+  enum PaserState state = kStart;
 
   while ((c = getchar()) != EOF) {
-    line[pos] = c;
-    switch (c) {
-      case '\t':
-        // Expand tab into blanks, at least one blank.
-        line[pos] = ' ';
-        for (++pos; pos < kMaxCol && pos % kTabSize != 0; ++pos) {
-          line[pos] = ' ';
-        }
-        if (pos == kMaxCol) {
-          fwrite(line, sizeof(*line), kMaxCol, stdout);
-          putchar('\n');
-          pos = 0;
-        }
-        break;
-      case '\n':
-        if (pos > 0) {
-          fwrite(line, sizeof(*line), pos, stdout);
-          putchar('\n');
-          pos = 0;
-        }
-        break;
-      default:
-        if (++pos == kMaxCol) {
-          //Find the last blank's position
-          while (pos > 0 && line[--pos] != ' ') {}
-          if (pos == 0) {
-            // No blank in this line, output all.
-            fwrite(line, sizeof(*line), kMaxCol, stdout);
-          } else {
-            // At least on blank found
-            fwrite(line, sizeof(*line), ++pos, stdout);
-          }
-          putchar('\n');
-          if (pos > 0 && pos < kMaxCol) {
-            memmove(line, line + pos, kMaxCol - pos);
-            pos = kMaxCol - pos;
-          } else {
+    switch (state) {
+      case kStart:
+        switch (c) {
+          case ' ':
+          case '\t':
+            // Leading blanks doesn't count for columns.
+            state = kLeadingBlank;
+            break;
+          case '\n':
             pos = 0;
-          }
+            break;
+          default:
+            state = kNormalCode;
+            putchar(c);
+            ++pos;
+            break;
         }
+        break;
+      case kLeadingBlank:
+        switch (c) {
+          case ' ':
+          case '\t':
+            break;
+          case '\n':
+            putchar(c);
+            pos = 0;
+            state = kStart;
+          default:
+            state = kNormalCode;
+            putchar(c);
+            ++pos;
+        }
+        break;
+      case kNormalCode:
+        trailing_spaces = 0;
+        trailing_tabs = 0;
+        switch (c) {
+          case ' ':
+            ++pos;
+            state = kTrailingBlank;
+            ++trailing_spaces;
+            break;
+          case '\t':
+            pos += kTabSize - pos % kTabSize;
+            state = kTrailingBlank;
+            ++trailing_tabs;
+            break;
+          case '\n':
+            pos = 0;
+            state = kStart;
+            putchar(c);
+            break;
+          default:
+            if (pos >= kMaxCol) {
+              putchar('\n');
+              putchar(c);
+              pos = 1;
+            } else if (++pos == kMaxCol) {
+              putchar(c);
+              putchar('\n');
+              pos = 0;
+              state = kStart;
+            } else {
+              putchar(c);
+            }
+            break;
+        }
+        break;
+      case kTrailingBlank:
+        switch (c) {
+          case ' ':
+            ++pos;
+            ++trailing_spaces;
+            break;
+          case '\t':
+            pos += kTabSize - pos % kTabSize;
+            ++trailing_tabs;
+            break;
+          case '\n':
+            putchar(c);
+            pos = 0;
+            state = kStart;
+            break;
+          default:
+            if (pos >= kMaxCol) {
+              putchar('\n');
+              putchar(c);
+              pos = 1;
+              state = kNormalCode;
+            } else if (++pos == kMaxCol) {
+              putchar(c);
+              putchar('\n');
+              pos = 0;
+              state = kStart;
+            } else {
+              while (trailing_spaces--) {
+                putchar(' ');
+              }
+              while (trailing_tabs--) {
+                putchar('\t');
+              }
+              putchar(c);
+              state = kNormalCode;
+            }
+        }
+        break;
     }
   }
-  return 0;
+ return 0;
 }

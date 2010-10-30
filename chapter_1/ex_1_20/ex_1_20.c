@@ -7,14 +7,14 @@ int main() {
   // Current char
   int c;
   // Current posistion
-  int pos = 1;
+  int pos = 0;
   // Number of blanks neccssary
   int blanks = 0;
 
   while ((c = getchar()) != EOF ) {
     switch (c) {
       case '\t':
-        blanks = kTabSize - (pos - 1) % kTabSize;
+        blanks = kTabSize - pos % kTabSize;
         for (; blanks > 0; --blanks) {
           putchar(' ');
           ++pos;
@@ -22,7 +22,7 @@ int main() {
         break;
       case '\n':
         putchar(c);
-        pos = 1;
+        pos = 0;
         break;
       default:
         putchar(c);
@@ -31,3 +31,4 @@ int main() {
   }
   return 0;
 }
+

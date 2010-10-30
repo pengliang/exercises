@@ -1,44 +1,67 @@
 #include <stdio.h>
 
 const int kTabSize = 8;
+// number of spaces neccessary
+static int spaces = 0;
+// number of tabs neccessary
+static int tabs = 0;
 
-// Replace strings of blanks with the least tabs and blanks.
+// Flush the cached tabs on stdout.
+void FlushCachedTabs();
+
+// Flush the cached spaces on stdout.
+void FlushCachedSpaces();
+
+// Replace strings of spaces with the least tabs and spaces.
 int main() {
   // Current char
   int c;
-  // number of blanks neccessary
-  int blanks = 0;
-  // number of tabs neccessary
-  int tabs = 0;
   // Current position
-  int pos = 1;
+  int pos = 0;
 
   while ((c = getchar()) != EOF) {
-    if (c == ' ') {
-      if (pos % kTabSize != 0) {
-        ++blanks;
-      } else {
-        blanks = 0;
-        ++tabs;
-      }
-    } else {
-      for ( ; tabs > 0; --tabs) {
-        putchar('\t');
-      }
-      if (c == '\t') {
-        blanks = 0;
-        pos += (kTabSize - (pos -1) % kTabSize) - 1;
-      } else {
-        for ( ; blanks > 0; --blanks) {
-          putchar(' ');
+    switch (c) {
+      case ' ':
+        if (pos % kTabSize != 0) {
+          ++spaces;
+        } else {
+          // Reach a tab stop.
+          spaces = 0;
+          ++tabs;
         }
-        if (c == '\n') {
-          pos = 0;
-        }
-      }
-      putchar(c);
-      ++pos;
+        break;
+      case '\t':
+        FlushCachedTabs();
+        // Forget the cached spaces.
+        spaces = 0;
+        pos += kTabSize - pos % KTabSize;
+        putchar(c);
+        break;
+      case '\n':
+        FlushCachedTabs();
+        FlushCachedSpaces();
+        // Reset the position flag.
+        pos = 0;
+        putchar(c);
+        break;
+      default:
+        FlushCachedTabs();
+        FlushCachedSpaces();
+        putchar(c);
+        ++pos;
     }
   }
   return 0;
+}
+
+void FlushCachedTabs() {
+  for (; tabs > 0; --tabs) {
+    putchar('\t');
+  }
+}
+
+void FlushCachedSpaces() {
+  for (; spaces > 0; --spaces) {
+    putchar(' ');
+  }
 }

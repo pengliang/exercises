@@ -1,22 +1,23 @@
 #ifndef K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_STACK_H_
 #define K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_STACK_H_
 
+struct Element;
+struct Stack;
 
-struct element {
+typedef struct Element Element;
+typedef struct Stack Stack;
+
+struct Element {
   char c;
-  int row;
+  int line;
   int col;
 };
 
-typedef struct element Element;
-
-struct stack {
+struct Stack {
   Element *base;
   Element *top;
   int size;
 };
-
-typedef struct stack Stack;
 
 // Init a empty stack.
 //

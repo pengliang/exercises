@@ -30,7 +30,6 @@ int Push(Stack *s, Element *element) {
     s->size += kIncrementSize;
   }
   memcpy(s->top, element, sizeof(Element));
-//  *s->top = element;
   ++s->top;
   return kOk;
 }
@@ -42,9 +41,6 @@ int Pop(Stack *s, Element *element) {
   } else {
     --s->top;
     memcpy(element, s->top, sizeof(Element));
-//   *element = *s->top;
     return kOk;
   }
 }
-
-
