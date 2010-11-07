@@ -8,39 +8,53 @@ static const int kError = 0;
 
 static const int kIncrementSize = 10;
 
-int InitStack(Stack *s, int init_size) {
-  s->base = malloc(sizeof(Element) * init_size);
-  if (!s->base) {
+int StackInit(Stack *s, int init_size) {
+  s->base_ = malloc(sizeof(Element) * init_size);
+  if (!s->base_) {
     // Out of memory
     exit(kOverflow);
   }
-  s->top = s->base;
-  s->size = init_size;
+  s->top_ = s->base_;
+  s->size_ = init_size;
   return kOk;
 }
 
-int Push(Stack *s, Element *element) {
-  if (s->top - s->base >= s->size) {
+int StackDestroy(Stack *s) {
+  free(s->base_);
+  return 1;
+}
+
+int StackGetSize(Stack *s) {
+  return s->size_;
+}
+
+int StackIsEmpty(Stack *s) {
+ return s->top_ == s->base_ ? 1 : 0;
+}
+
+int StackPush(Stack *s, Element *element) {
+  if (s->top_ - s->base_ >= s->size_) {
     //Increase stack's memory
-    s->base = realloc(s->base, (s->size + kIncrementSize) * sizeof(Element));
-    if (!s->base) {
+    s->base_ = realloc(s->base_,
+                       (s->size_ + kIncrementSize) * sizeof(Element));
+    if (!s->base_) {
       exit(kOverflow);
     }
-    s->top = s->base + s->size;
-    s->size += kIncrementSize;
+    s->top_ = s->base_ + s->size_;
+    s->size_ += kIncrementSize;
   }
-  memcpy(s->top, element, sizeof(Element));
-  ++s->top;
+  memcpy(s->top_, element, sizeof(Element));
+  ++s->top_;
   return kOk;
 }
 
-int Pop(Stack *s, Element *element) {
-  if (s->top == s->base) {
+int StackPop(Stack *s, Element *element) {
+  if (s->top_ == s->base_) {
     // Empty, return error
     return kError;
   } else {
-    --s->top;
-    memcpy(element, s->top, sizeof(Element));
+    --s->top_;
+    memcpy(element, s->top_, sizeof(Element));
     return kOk;
   }
 }

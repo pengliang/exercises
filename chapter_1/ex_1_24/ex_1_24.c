@@ -12,14 +12,17 @@ enum ParserState {
   kLeadingSlash,
   // Found a trailing star '*' in a block comment
   kTrailingStar,
-  // In a block comment, /* ... */
+  // In block comment, /* ... */
   kInBlockComment,
-  // In a line comment, start with //
+  // In line comment, start with //
   kInLineComment,
-  // IN a quotation, begin with ' or "
-  kInQuotes,
-  // FOund a escape in quotes
-  kEscapeInQuotes
+  // IN single quotation, begin with '
+  kInSingleQuotation,
+  // In double quotation, begin with "
+  kInDoubleQuotation,
+  // Found a escape in quotations
+  kEscapeInSingleQuotation,
+  kEscapeInDoubleQuotation
 };
 
 // Check the right bracket's matching.
@@ -32,12 +35,10 @@ void CheckBrackets(Stack *s, char c);
 int main() {
   // Current char.
   int c;
-  // Open quote char, ' or "
-  int quote_char;
   enum ParserState state = kNormalCode;
   Element top_element;
   Stack s;
-  InitStack(&s, kStackInitSize);
+  StackInit(&s, kStackInitSize);
   int block_comment_start_line =0;
   int block_comment_start_col = 0;
 
@@ -50,9 +51,10 @@ int main() {
             state = kLeadingSlash;
             break;
           case '\'':
+            state = kInSingleQuotation;
+            break;
           case '"':
-            state = kInQuotes;
-            quote_char = c;
+            state = kInDoubleQuotation;
             break;
           case '\n':
             col = 0;
@@ -77,21 +79,49 @@ int main() {
             state = kNormalCode;
         }
         break;
-      case kInQuotes:
-        if (c == '\\') {
-          state = kEscapeInQuotes;
-        } else if (c == quote_char) {
-          state = kNormalCode;
-        } else if (c == '\n'){
-          // Missmatch Quotation marks in this line.
-          printf("line %d: error: missing terminating %c character.\n",
-                 line, quote_char);
-          ++line;
-          state = kNormalCode;
+      case kInSingleQuotation:
+        switch (c) {
+          case '\\':
+            state = kEscapeInSingleQuotation;
+            break;
+          case '\'':
+            state = kNormalCode;
+            break;
+          case '\n':
+            // Miss match Quotation marks in this line.
+            printf("line %d: error: missing terminating ' character.\n",
+                   line);
+            ++line;
+            state = kNormalCode;
+            break;
+          default:
+            break;
         }
         break;
-      case kEscapeInQuotes:
-        state = kInQuotes;
+      case kInDoubleQuotation:
+        switch (c) {
+          case '\\':
+            state = kEscapeInDoubleQuotation;
+            break;
+          case '"':
+            state = kNormalCode;
+            break;
+          case '\n':
+            // Miss match Quotation marks in this line.
+            printf("line %d: error: missing terminating \".\n",
+                   line);
+            ++line;
+            state = kNormalCode;
+            break;
+          default:
+            break;
+        }
+        break;
+      case kEscapeInSingleQuotation:
+        state = kInSingleQuotation;
+        break;
+      case kEscapeInDoubleQuotation:
+        state = kInDoubleQuotation;
         break;
       case kInBlockComment:
         switch (c) {
@@ -131,19 +161,23 @@ int main() {
       printf("line %d, col %d: error: unterminated comment.\n",
               block_comment_start_line, block_comment_start_col);
       break;
-    case kInQuotes:
-      printf("line %d: error: missing terminating quote character.\n",
-             line, c);
+    case kInSingleQuotation:
+      printf("line %d: error: missing terminating ' character.\n",
+             line);
+      break;
+    case kInDoubleQuotation:
+      printf("line %d: error: missing terminating \" character.\n",
+             line);
       break;
     default:
       break;
   }
-  while (Pop(&s, &top_element)) {
+  while (StackPop(&s, &top_element)) {
     //Not Empty Stack
-    printf("line %d, col %d: error: Missmatch for %c character.\n",
+    printf("line %d, col %d: error: miss match for %c character.\n",
            top_element.line, top_element.col, top_element.c);
   }
-  free(s.base);
+  StackDestroy(&s);
   return 0;
 }
 
@@ -156,26 +190,26 @@ void CheckBrackets(Stack *s, char c) {
       top_element.c = c;
       top_element.line = line;
       top_element.col = col;
-      Push(s, &top_element);
+      StackPush(s, &top_element);
       break;
     case ')':
-      Pop(s, &top_element);
+      StackPop(s, &top_element);
       if (top_element.c != '(') {
-        printf("line %d, col %d: error: missmatch for %c character.\n",
+        printf("line %d, col %d: error: miss match for %c character.\n",
                line, col, c);
       }
       break;
     case ']':
-      Pop(s, &top_element);
+      StackPop(s, &top_element);
       if (top_element.c != '[') {
-        printf("line %d, col %d: error: missmatch for %c character.\n",
+        printf("line %d, col %d: error: miss match for %c character.\n",
                line, col, c);
       }
       break;
     case '}':
-      Pop(s, &top_element);
+      StackPop(s, &top_element);
       if (top_element.c != '{') {
-        printf("line %d, col %d: error: missmatch for %c character.\n",
+        printf("line %d, col %d: error: miss match for %c character.\n",
                line, col, c);
       }
       break;

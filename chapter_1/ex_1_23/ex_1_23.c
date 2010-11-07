@@ -13,7 +13,7 @@ enum ParserState {
   kInLineComment,
   // IN a quotation, begin with ' or "
   kInQuotes,
-  // FOund a escape in quotes
+  // Found a escape in quotes
   kEscapeInQuotes
 };
 

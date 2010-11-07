@@ -1,9 +1,9 @@
 #include <stdio.h>
 
 const int kTabSize = 8;
-// number of spaces neccessary
+// number of spaces necessary
 static int spaces = 0;
-// number of tabs neccessary
+// number of tabs necessary
 static int tabs = 0;
 
 // Flush the cached tabs on stdout.
