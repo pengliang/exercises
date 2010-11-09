@@ -4,7 +4,7 @@
 //
 // @param fahr the fahrenheit value to convert.
 // @return the ceisius value converted from param.
-double FahrToCeisius(double fahr);
+static double FahrToCeisius(double fahr);
 
 // prints Fahrenheit - Ceisius table for fahr = 0,20, ... ,300
 int main() {
@@ -20,7 +20,6 @@ int main() {
   return 0;
 }
 
-
-double FahrToCeisius(double fahr) {
+static double FahrToCeisius(double fahr) {
   return (5.0 / 9.0) * (fahr - 32.0);
 }

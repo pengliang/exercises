@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-const int kMaxHistLength = 20;
-const int kMaxWordLength = 15;
+static const int kMaxHistLength = 20;
+static const int kMaxWordLength = 15;
 
 enum ParserState {
   kStateOtherCharacters,
@@ -16,8 +16,8 @@ enum ParserState {
 // @param max_number_of_length the max value of the number of words with some
 //                             length, also is the maximum value of word_lens.
 // @param overflow number of the words that exceed the kMaxWordLength
-void PrintHorizontalHist(int word_lens[], int max_number_of_length,
-                         int overflow);
+static void PrintHorizontalHist(int word_lens[], int max_number_of_length,
+                                int overflow);
 
 // Print the vertical histogram of the lengths of words in input.
 //
@@ -26,8 +26,8 @@ void PrintHorizontalHist(int word_lens[], int max_number_of_length,
 // @param max_number_of_length the max value of the number of words with some
 //                             length, also is the maximum value of word_lens
 // @param overflow number of the words that exceed the kMaxWordLength
-void PrintVerticalHist(int word_lens[], int max_number_of_length,
-                       int overflow);
+static void PrintVerticalHist(int word_lens[], int max_number_of_length,
+                              int overflow);
 
 // Prints a histogram of the lengths of words in input.
 int main() {
@@ -89,8 +89,8 @@ int main() {
   PrintVerticalHist(word_lens, max_number_of_length, overflow);
 }
 
-void PrintHorizontalHist(int word_lens[], int max_number_of_length,
-                         int overflow) {
+static void PrintHorizontalHist(int word_lens[], int max_number_of_length,
+                                int overflow) {
   // Length of each bar
   int bar_len = 0;
 
@@ -114,8 +114,8 @@ void PrintHorizontalHist(int word_lens[], int max_number_of_length,
   }
 }
 
-void PrintVerticalHist(int word_lens[], int max_number_of_length,
-                       int overflow) {
+static void PrintVerticalHist(int word_lens[], int max_number_of_length,
+                              int overflow) {
   for (int i = kMaxHistLength; i > 0; --i) {
     for (int j = 0; j < kMaxWordLength; ++j) {
       if (word_lens[j] * kMaxHistLength / max_number_of_length >= i) {

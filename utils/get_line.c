@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int GetLine(char *line_buf, int line_buf_length) {
+int GetLimitedLine(char *line_buf, int line_buf_length) {
   int current_char;
   int line_length = 0, buf_index = 0;
   for (line_length = 0; (current_char = getchar()) != EOF
@@ -23,7 +23,7 @@ int GetLine(char *line_buf, int line_buf_length) {
   return line_length;
 }
 
-int GetAllLine(char **line_buf, int line_buf_length) {
+int GetLine(char **line_buf, int line_buf_length) {
   int current_char;
   int line_length = 0, buf_index = 0;
   for (line_length = 0; (current_char = getchar()) != EOF

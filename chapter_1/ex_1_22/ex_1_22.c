@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 // Maximum column of output
-const int kMaxCol = 10;
-const int kTabSize = 8;
+static const int kMaxCol = 10;
+static const int kTabSize = 8;
 
 enum PaserState {
   kStart,

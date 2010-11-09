@@ -2,8 +2,8 @@
 #include <ctype.h>
 #include <string.h>
 
-const int kMaxHistLength = 15;
-const int kMaxCharNum = 255;
+static const int kMaxHistLength = 15;
+static const int kMaxCharNum = 255;
 
 // Prints a histogram of the frequencies of different characters in input
 int main() {

@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const int kOverflow = -2;
-static const int kOk = 1;
-static const int kError = 0;
+const int kOverflow = -2;
+const int kOk = 1;
+const int kError = 0;
 
 static const int kIncrementSize = 10;
 
@@ -29,7 +29,7 @@ int StackGetSize(Stack *s) {
 }
 
 int StackIsEmpty(Stack *s) {
- return s->top_ == s->base_ ? 1 : 0;
+  return s->top_ == s->base_;
 }
 
 int StackPush(Stack *s, Element *element) {

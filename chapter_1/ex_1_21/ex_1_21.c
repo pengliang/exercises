@@ -1,16 +1,16 @@
 #include <stdio.h>
 
-const int kTabSize = 8;
+static const int kTabSize = 8;
 // number of spaces necessary
 static int spaces = 0;
 // number of tabs necessary
 static int tabs = 0;
 
 // Flush the cached tabs on stdout.
-void FlushCachedTabs();
+static void FlushCachedTabs();
 
 // Flush the cached spaces on stdout.
-void FlushCachedSpaces();
+static void FlushCachedSpaces();
 
 // Replace strings of spaces with the least tabs and spaces.
 int main() {
@@ -54,13 +54,13 @@ int main() {
   return 0;
 }
 
-void FlushCachedTabs() {
+static void FlushCachedTabs() {
   for (; tabs > 0; --tabs) {
     putchar('\t');
   }
 }
 
-void FlushCachedSpaces() {
+static void FlushCachedSpaces() {
   for (; spaces > 0; --spaces) {
     putchar(' ');
   }

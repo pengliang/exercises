@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int kMaxLineLength = 1000;
+static const int kMaxLineLength = 1000;
 
 // Remove trailing blanks and tabs, and delete blanks lines
 int main() {

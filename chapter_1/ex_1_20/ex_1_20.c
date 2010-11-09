@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-const int kTabSize = 8;
+static const int kTabSize = 8;
 
 // Replace tabs with the proper number of blanks
 int main() {

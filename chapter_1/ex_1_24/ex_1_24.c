@@ -20,8 +20,9 @@ enum ParserState {
   kInSingleQuotation,
   // In double quotation, begin with "
   kInDoubleQuotation,
-  // Found a escape in quotations
+  // Found a escape in single quotation
   kEscapeInSingleQuotation,
+  // Found a escape in double quotation
   kEscapeInDoubleQuotation
 };
 
@@ -29,7 +30,7 @@ enum ParserState {
 //
 // @param s, the stack's address.
 // @param c, current character.
-void CheckBrackets(Stack *s, char c);
+static void CheckBrackets(Stack *s, char c);
 
 // Remove all comments from a valid C program
 int main() {
@@ -89,8 +90,7 @@ int main() {
             break;
           case '\n':
             // Miss match Quotation marks in this line.
-            printf("line %d: error: missing terminating ' character.\n",
-                   line);
+            printf("line %d: error: missing terminating ' character.\n", line);
             ++line;
             state = kNormalCode;
             break;
@@ -108,8 +108,7 @@ int main() {
             break;
           case '\n':
             // Miss match Quotation marks in this line.
-            printf("line %d: error: missing terminating \".\n",
-                   line);
+            printf("line %d: error: missing terminating \" character.\n", line);
             ++line;
             state = kNormalCode;
             break;
@@ -159,7 +158,7 @@ int main() {
   switch (state) {
     case kInBlockComment:
       printf("line %d, col %d: error: unterminated comment.\n",
-              block_comment_start_line, block_comment_start_col);
+             block_comment_start_line, block_comment_start_col);
       break;
     case kInSingleQuotation:
       printf("line %d: error: missing terminating ' character.\n",
@@ -173,7 +172,7 @@ int main() {
       break;
   }
   while (StackPop(&s, &top_element)) {
-    //Not Empty Stack
+    // Not Empty Stack
     printf("line %d, col %d: error: miss match for %c character.\n",
            top_element.line, top_element.col, top_element.c);
   }
@@ -181,7 +180,7 @@ int main() {
   return 0;
 }
 
-void CheckBrackets(Stack *s, char c) {
+static void CheckBrackets(Stack *s, char c) {
   Element top_element;
   switch (c) {
     case '(':
