@@ -5,7 +5,7 @@
 // @param n, length of array.
 // @return the index if x in array v, -1 if not.
 int BinarySearch(int x, int v[], int n) {
-  int low = 0, high = n -1;
+  int low = 0, high = n;
   int mid = (mid + high) / 2;
 
   while (low <= high && x != v[mid]) {

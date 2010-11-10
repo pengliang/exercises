@@ -1,4 +1,4 @@
-// Set n bits of x at position p with bits of y
+// Sets n bits of x at position p with bits of y
 //
 // @param x
 // @param p

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-// An style without && and || operator for next program.
+// An style without && and || operator for blow program.
 // for (i = 0; i < lim - 1; && (c = getchar()) != '\n' && c! = EOF; ++i) {
 //   s[i] = c;
 // }
@@ -8,7 +8,7 @@ int main() {
   int c, i = 0, lim = 10;
   char s[lim];
 
-  for (i  = 0; i < lim -1; ++i) {
+  for (i = 0; i < lim -1; ++i) {
     c = getchar();
     if (c == '\n') {
       break;
