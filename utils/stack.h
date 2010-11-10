@@ -1,5 +1,5 @@
-#ifndef K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_STACK_H_
-#define K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_STACK_H_
+#ifndef K_AND_R_ASSIGNMENTS_UTILS_STACK_H_
+#define K_AND_R_ASSIGNMENTS_UTILS_STACK_H_
 
 struct Element {
   char c;
@@ -67,4 +67,4 @@ int StackIsEmpty(Stack *self);
 // @return stack's size.
 int StackGetSize(Stack *self);
 
-#endif // K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_STACK_H_
+#endif // K_AND_R_ASSIGNMENTS_UTILS_STACK_H_

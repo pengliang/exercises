@@ -1,5 +1,5 @@
-#ifndef K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_GET_LINE_H_
-#define K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_GET_LINE_H_
+#ifndef K_AND_R_ASSIGNMENTS_UTILS_GET_LINE_H_
+#define K_AND_R_ASSIGNMENTS_UTILS_GET_LINE_H_
 
 // Reads a limited length line from the standard input.
 // If the user's input is ended with line-feed '\n',
@@ -22,4 +22,4 @@ int GetLimitedLine(char line_buf[], int line_buf_length);
 // @return the length of the user's input.
 int GetLine(char **line_buf_point, int line_buf_length);
 
-#endif  // K_AND_R_ASSIGNMENTS_CHAPTER_1_UTILS_GET_LINE_H_
+#endif  // K_AND_R_ASSIGNMENTS_UTILS_GET_LINE_H_
