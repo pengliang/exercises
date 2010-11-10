@@ -1,52 +1,49 @@
 #include <stdio.h>
 
 static const int kTabSize = 8;
-// number of spaces necessary
-static int spaces = 0;
-// number of tabs necessary
-static int tabs = 0;
 
-// Flush the cached tabs on stdout.
-static void FlushCachedTabs();
+// Flush the cached space_number on stdout.
+//
+// @param space_number cached space_number number.
+static void FlushCachedSpaces(int space_number);
 
-// Flush the cached spaces on stdout.
-static void FlushCachedSpaces();
-
-// Replace strings of spaces with the least tabs and spaces.
+// Replace strings of space_number with the least tabs and space_number.
 int main() {
   // Current char
   int c;
   // Current position
   int pos = 0;
+  // number of space_number necessary
+  int space_number = 0;
 
   while ((c = getchar()) != EOF) {
     switch (c) {
       case ' ':
+        ++pos;
         if (pos % kTabSize != 0) {
-          ++spaces;
+          ++space_number;
         } else {
           // Reach a tab stop.
-          spaces = 0;
-          ++tabs;
+          space_number = 0;
+          putchar('\t');
         }
         break;
       case '\t':
-        FlushCachedTabs();
-        // Forget the cached spaces.
-        spaces = 0;
-        pos += kTabSize - pos % KTabSize;
+        // Forget the cached space_number.
+        space_number = 0;
+        pos += kTabSize - pos % kTabSize;
         putchar(c);
         break;
       case '\n':
-        FlushCachedTabs();
-        FlushCachedSpaces();
+        FlushCachedSpaces(space_number);
+        space_number = 0;
         // Reset the position flag.
         pos = 0;
         putchar(c);
         break;
       default:
-        FlushCachedTabs();
-        FlushCachedSpaces();
+        FlushCachedSpaces(space_number);
+        space_number = 0;
         putchar(c);
         ++pos;
     }
@@ -54,14 +51,8 @@ int main() {
   return 0;
 }
 
-static void FlushCachedTabs() {
-  for (; tabs > 0; --tabs) {
-    putchar('\t');
-  }
-}
-
-static void FlushCachedSpaces() {
-  for (; spaces > 0; --spaces) {
+static void FlushCachedSpaces(int space_number) {
+  for (; space_number > 0; --space_number) {
     putchar(' ');
   }
 }

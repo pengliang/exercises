@@ -3,8 +3,6 @@
 
 const int kStackInitSize = 100;
 
-static int col = 0, line = 1;
-
 enum ParserState {
   // Parsing Normal code
   kNormalCode,
@@ -26,16 +24,20 @@ enum ParserState {
   kEscapeInDoubleQuotation
 };
 
-// Check the right bracket's matching.
+// Checks the right bracket's matching.
 //
-// @param s, the stack's address.
-// @param c, current character.
-static void CheckBrackets(Stack *s, char c);
+// @param s the stack's address.
+// @param c current character.
+// @param col current column number.
+// @Param line current line number.
+static void CheckBrackets(Stack *s, char c, int col, int line);
 
 // Remove all comments from a valid C program
 int main() {
   // Current char.
   int c;
+  // Current column and line number.
+  int col = 0, line = 1;
   enum ParserState state = kNormalCode;
   Element top_element;
   Stack s;
