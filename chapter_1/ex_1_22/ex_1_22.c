@@ -64,10 +64,22 @@ int main() {
           case ' ':
             blank_buf[b_i++] = c;
             ++pos;
+            if (pos >= kMaxCol) {
+              putchar('\n');
+              state = kLeadingBlank;
+              pos = 0;
+              b_i = 0;
+            }
             break;
           case '\t':
             blank_buf[b_i++] = c;
             pos += kTabSize - pos % kTabSize;
+            if (pos >= kMaxCol) {
+              putchar('\n');
+              state = kLeadingBlank;
+              pos = 0;
+              b_i = 0;
+            }
             break;
           case '\n':
             // Forget the cached trailing blanks.
