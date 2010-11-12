@@ -48,12 +48,16 @@ int main() {
             break;
           case '\n':
             pos = 0;
+            b_i = 0;
+            n_i = 0;
             putchar(c);
             break;
           default:
             if (pos >= kMaxCol) {
               putchar('\n');
               pos = 0;
+              n_i = 0;
+              b_i = 0;
             }
             ++pos;
             putchar(c);
@@ -115,8 +119,8 @@ int main() {
             fwrite(new_line_buf, sizeof(char), n_i, stdout);
             n_i = 0;
             ++pos;
-            state = kTrailingBlank;
             blank_buf[b_i++] = c;
+            state = kTrailingBlank;
             break;
           case '\t':
             fwrite(blank_buf, sizeof(char), b_i, stdout);
@@ -124,8 +128,8 @@ int main() {
             fwrite(new_line_buf, sizeof(char), n_i, stdout);
             n_i = 0;
             pos += kTabSize - pos % kTabSize;
-            state = kTrailingBlank;
             blank_buf[b_i++] = c;
+            state = kTrailingBlank;
             break;
           case '\n':
             fwrite(blank_buf, sizeof(char), b_i, stdout);
@@ -134,14 +138,18 @@ int main() {
             n_i = 0;
             putchar(c);
             pos = 0;
+            state = kNormalCode;
+            break;
           default:
             if (pos >= kMaxCol) {
-              putchar('\n');
-              pos = 0;
               // Flush the cached new line contents.
-              fwrite(new_line_buf, sizeof(char), n_i, stdout); n_i = 0;
+              fwrite(new_line_buf, sizeof(char), n_i, stdout);
+              n_i = 0;
               // Forget the cached blank;
               b_i = 0;
+              // New line
+              putchar('\n');
+              pos = 0;
               putchar(c);
               ++pos;
               state = kNormalCode;
