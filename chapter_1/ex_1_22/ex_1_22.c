@@ -7,7 +7,7 @@ static const int kMaxCol = 10;
 static const int kTabSize = 8;
 
 enum PaserState {
-  kNormalCode,
+  kNewLine,
   // After folding, the new line may be starting with blank.
   kLeadingBlank,
   // Each blank may be the break position.
@@ -23,7 +23,7 @@ int main() {
   int c;
   // Position in the line, start from 0
   int pos = 0;
-  enum PaserState state = kNormalCode;
+  enum PaserState state = kNewLine;
 
   // Buffer for blanks which may be at break position.
   char blank_buf[kMaxCol];
@@ -34,17 +34,17 @@ int main() {
 
   while ((c = getchar()) != EOF) {
     switch (state) {
-      case kNormalCode:
+      case kNewLine:
         switch (c) {
           case ' ':
             ++pos;
-            state = kTrailingBlank;
             blank_buf[b_i++] = c;
+            state = kTrailingBlank;
             break;
           case '\t':
             pos += kTabSize - pos % kTabSize;
-            state = kTrailingBlank;
             blank_buf[b_i++] = c;
+            state = kTrailingBlank;
             break;
           case '\n':
             pos = 0;
@@ -66,23 +66,25 @@ int main() {
       case kTrailingBlank:
         switch (c) {
           case ' ':
-            blank_buf[b_i++] = c;
-            ++pos;
             if (pos >= kMaxCol) {
               putchar('\n');
-              state = kLeadingBlank;
               pos = 0;
               b_i = 0;
+              state = kLeadingBlank;
+            } else {
+              blank_buf[b_i++] = c;
+              ++pos;
             }
             break;
           case '\t':
-            blank_buf[b_i++] = c;
-            pos += kTabSize - pos % kTabSize;
             if (pos >= kMaxCol) {
               putchar('\n');
-              state = kLeadingBlank;
               pos = 0;
               b_i = 0;
+              state = kLeadingBlank;
+            } else {
+              blank_buf[b_i++] = c;
+              pos += kTabSize - pos % kTabSize;
             }
             break;
           case '\n':
@@ -91,12 +93,21 @@ int main() {
             // New line.
             putchar(c);
             pos = 0;
-            state = kNormalCode;
+            state = kNewLine;
             break;
           default:
-            state = kMayBeNewLine;
-            ++pos;
-            new_line_buf[n_i++] = c;
+            if (pos >= kMaxCol) {
+              putchar('\n');
+              pos = 0;
+              b_i = 0;
+              ++pos;
+              putchar(c);
+              state = kNewLine;
+            } else {
+              ++pos;
+              new_line_buf[n_i++] = c;
+              state = kMayBeNewLine;
+            }
         }
         break;
       case kLeadingBlank:
@@ -106,9 +117,9 @@ int main() {
           case '\t':
             break;
           default:
-            state = kNormalCode;
             putchar(c);
             ++pos;
+            state = kNewLine;
         }
         break;
       case kMayBeNewLine:
@@ -138,21 +149,22 @@ int main() {
             n_i = 0;
             putchar(c);
             pos = 0;
-            state = kNormalCode;
+            state = kNewLine;
             break;
           default:
             if (pos >= kMaxCol) {
-              // Flush the cached new line contents.
-              fwrite(new_line_buf, sizeof(char), n_i, stdout);
-              n_i = 0;
-              // Forget the cached blank;
-              b_i = 0;
               // New line
               putchar('\n');
               pos = 0;
+              // Flush the cached new line contents.
+              fwrite(new_line_buf, sizeof(char), n_i, stdout);
+              pos = n_i;
+              n_i = 0;
+              // Forget the cached blank;
+              b_i = 0;
               putchar(c);
               ++pos;
-              state = kNormalCode;
+              state = kNewLine;
             } else {
               ++pos;
               new_line_buf[n_i++] = c;
