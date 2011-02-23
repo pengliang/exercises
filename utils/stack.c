@@ -24,6 +24,10 @@ int StackDestroy(Stack *s) {
   return 1;
 }
 
+void StackClear(Stack *s) {
+  s->top_ = s->base_;
+}
+
 int StackGetSize(Stack *s) {
   return s->size_;
 }

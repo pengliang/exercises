@@ -1,6 +1,7 @@
 #ifndef K_AND_R_ASSIGNMENTS_UTILS_STACK_H_
 #define K_AND_R_ASSIGNMENTS_UTILS_STACK_H_
 
+/*
 struct Element {
   char c;
   int line;
@@ -8,6 +9,9 @@ struct Element {
 };
 
 typedef struct Element Element;
+*/
+
+typedef double Element;
 
 struct Stack {
   Element *base_;
@@ -36,6 +40,10 @@ int StackInit(Stack *self, int init_size);
 // @return kOk for success,
 //         kError for something error.
 int StackDestroy(Stack *self);
+
+// Clear a stack
+// @param self the stack object's address.
+void StackClear(Stack *self);
 
 // Pushes an element on the top of stack s.
 //
