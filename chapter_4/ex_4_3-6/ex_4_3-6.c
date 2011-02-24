@@ -87,6 +87,7 @@ int GetOp(char op[]) {
           ungetc(c, stdin);
           return '+';
         }
+        break;
       case kOperandInteger:
         if (isdigit(c)) {
           op[i++] = c;
