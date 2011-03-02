@@ -19,7 +19,7 @@ static const int kStackInitSize = 100;
 static inline void Pop(Stack *stack, Element *top) {
   if (!StackPop(stack, top)) {
     printf("Error: empty stack.");
-    exit(-1);
+    exit(1);
   }
 }
 
@@ -27,7 +27,7 @@ static inline void Pop(Stack *stack, Element *top) {
 static inline void Push(Stack *stack, Element *top) {
   if (!StackPush(stack, top)) {
     printf("Error: memory overflow!");
-    exit(-1);
+    exit(1);
   }
 }
 
@@ -48,7 +48,7 @@ static inline void MathFunc(Stack *stack, char func[]) {
     op = pow(op2, op);
   } else {
     printf("Error: function %s not supported\n", func);
-    exit(-1);
+    exit(1);
   }
   Push(stack, &op);
 }
@@ -86,7 +86,7 @@ int main() {
           variable[var - 'A'] = op; 
         } else {
           printf("Error: not valid variable name\n");
-          exit(-1);
+          exit(1);
         }
         break;
       case '+':
@@ -115,7 +115,7 @@ int main() {
           Push(&stack, &op);
         } else {
           printf("Error: zero divisor\n");
-          exit(-1);
+          exit(1);
         }
         break;
       case '%':
@@ -126,7 +126,7 @@ int main() {
           Push(&stack, &op);
         } else {
           printf("Error: zero divisor\n");
-          exit(-1);
+          exit(1);
         }
         break;
       case '\n':
@@ -162,7 +162,7 @@ int main() {
           Push(&stack, variable + op_type - 'A');
         } else {
           printf("Error: unknown command \n");
-          exit(-1);
+          exit(1);
         }
         break;
     }
