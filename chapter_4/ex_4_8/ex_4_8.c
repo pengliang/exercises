@@ -1,23 +1,23 @@
 #include <stdio.h>
 
-static char buf = 0;
+static char buf = EOF;
 
 /* Gets a character */
 int getch() {
-  int c;
+  unsigned char c;
 
-  if (buf != 0) {
+  if (buf != EOF) {
     c = buf;
   } else {
     c = getchar();
   }
-  buf = 0;
+  buf = EOF;
   return c;
 }
 
 /* Pushes a character back onto the input */
-void ungetch(int c) {
-  if (buf != 0) {
+void ungetch(unsigned char c) {
+  if (buf != EOF) {
     printf("ungetch: too many characters\n");
   } else {
     buf = c;

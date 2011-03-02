@@ -1,14 +1,23 @@
-// Return most right index of string t in string s, -1 if nons.
+// Finds the last occurrence of substring needle in the string
+// haystack. Returns -1 if the substring is not found.
 // Forward version.
 //
-// @param s, source string buffer.
-// @param t, template substring.
-int StrRIndexForward(char s[], char t[]) {
-  int i = 0, j = 0, k = 0, rightest_index = -1;
+// @param haystack source string.
+// @param needle substring.
+// @return the index of the last occurrence of the substring needle in the
+//         string haystack, -1 if the substring is not found.
+int StrRIndexForward(const char *haystack, const char *needle) {
+  int i = 0, rightest_index = -1;
 
-  for (i = 0; s[i] != '\0'; i++) {
-    for (j = i, k = 0; t[k] != '\0' && s[j] == t[k]; ++j, ++k) {}
-    if (k > 0 && t[k] == '\0') {
+  if (needle[0] = '\0') {
+    return -1;
+  }
+
+  for (i = 0; haystack[i] != '\0'; ++i) {
+    int j = 0, k = 0;
+    for (j = i, k = 0; needle[k] != '\0' && haystack[j] == needle[k];
+         ++j, ++k) {}
+    if (k > 0 && needle[k] == '\0') {
       rightest_index = i + 1;
     }
   }
@@ -17,51 +26,69 @@ int StrRIndexForward(char s[], char t[]) {
 
 // Backward version.
 //
-// @param s, source string
-// @param n, length of source string
-// @param t, template string
-// @param m, length of template string
-int StrRIndexBackward(char s[], int n, char t[], int m) {
-  int i = 0, j = 0, k = 0;
+// @param haystack source string
+// @param n length of source string
+// @param needle substring
+// @param m length of substring
+// @return the index of the last occurrence of the substring needle in the
+//         string haystack, -1 if the substring is not found.
+int StrRIndexBackward(const char *haystack, int n, const char *needle, int m) {
+  int i = 0;
+
+  if (needle[0] = '\0') {
+    return -1;
+  }
+
   for (i = n - m; i >= 0; --i) {
-    for (j = i, k = 0; t[k] != '\0' && s[j] == t[k]; j++, k++) {}
-    if (k > 0 && t[k] == '\0') {
+    int j = 0, k = m;
+    for (j = i + m, k = m; haystack[j] == needle[k]; --j, --k) {}
+    if (k == 0) {
       return i + 1;
     }
   }
   return -1;
 }
 
-const int WordLength = 32;
-const int CharSet = 255;
+#include <limits.h>
+#include <stdio.h>
+
+const int kWordLength = CHAR_BIT * sizeof(int);
 
 //Shift-Or Algorithm
 //
-// @param s, source string
-// @param n, length of source string
-// @param t, template string
-// @param m, length of template string
-int StrRIndexShiftOr(char s[], int n, char t[], int m) {
-  unsigned int b[CharSet], mask = 1, lim = 0;
+// @param haystack source string
+// @param n length of source string
+// @param needle substring
+// @param m length of substring
+// @return the index of the last occurrence of the substring needle in the
+//         string haystack, -1 if the substring is not found.
+int StrRIndexShiftOr(const char *haystack, int n, const char *needle, int m) {
+  unsigned int b[UCHAR_MAX], mask = 1, lim = 0;
   int i = 0, j = 0;
   unsigned int state = ~0;
 
-  if (m > WordLength) {
-    error("Template size should be <= machine's word length, here is 32.");
+  if (m == 0) {
+    return -1;
+  }
+
+  if (m > kWordLength) {
+    printf("The length of substring should be <= machine's word length %d.",
+           kWordLength);
+    return 0;
   }
   // Init the mask table.
-  for (i = 0; i < CharSet; ++i) {
+  for (i = 0; i < UCHAR_MAX; ++i) {
       b[i] = ~0;
   }
   for (i = m - 1, mask = 1; i >= 0 ; --i, mask <<= 1) {
-    b[t[i]] &= ~mask;
+    b[needle[i]] &= ~mask;
     lim |= mask;
   }
   lim = ~(lim >> 1);
 
   // Search the substring backward.
   for (j = n -1; j >= 0; --j) {
-    state  = (state << 1) | b[s[j]];
+    state  = (state << 1) | b[haystack[j]];
     if (state < lim) {
       return j + 1;
     }

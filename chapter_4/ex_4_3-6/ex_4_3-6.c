@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <math.h>
 #include "utils/stack.h"
+#include "getopt.h"
 
 // Signal that a number was found
 #define NUMBER '0'
@@ -14,115 +15,27 @@ static const int kMaxOp = 100;
 static const int kVarNum = 26;
 static const int kStackInitSize = 100;
 
-enum PaserState {
-  kStart,
-  kFunction,
-  kOperandInteger,
-  kOperandFraction,
-  kMinus,
-  kPlus
-};
-
-/* Gets the next operator or numeric operand */
-int GetOp(char op[]) {
-  char c;
-  enum PaserState state = kStart;
-  int i  = 0;
-
-  while ((c = getchar()) != EOF) {
-    switch (state) {
-      case kStart:
-        i = 0;
-        if (isdigit(c)) {
-          state = kOperandInteger;
-          op[i++] = c;
-        } else if (islower(c)) {
-          op[i++] = c;
-          state = kFunction;
-        } else {
-          switch (c) {
-            case ' ':
-            case '\t':
-              break;
-            case '-':
-              state = kMinus;
-              break;
-            case '+':
-              state = kPlus;
-              break;
-            default:
-              return c;
-          }
-        }
-        break;
-      case kFunction:
-        if (islower(c)) {
-          op[i++] = c;
-        } else {
-          op[i] = '\0';
-          ungetc(c, stdin);
-          if (i > 1) {
-            return FUNCTION;
-          } else {
-            return op[i-1];
-          }
-        }
-        break;
-      case kMinus:
-        if (isdigit(c)) {
-          op[i++] = '-';
-          op[i++] = c;
-          state = kOperandInteger;
-        } else {
-          ungetc(c, stdin);
-          return '-';
-        }
-        break;
-      case kPlus:
-        if (isdigit(c)) {
-          op[i++] = '+';
-          op[i++] = c;
-          state = kOperandInteger;
-        } else {
-          ungetc(c, stdin);
-          return '+';
-        }
-        break;
-      case kOperandInteger:
-        if (isdigit(c)) {
-          op[i++] = c;
-        } else {
-          switch (c) {
-            case '.':
-              op[i++] = '.';
-              state = kOperandFraction;
-              break;
-            default:
-              op[i] = '\0';
-              ungetc(c, stdin);
-              return NUMBER;
-          }
-        }
-        break;
-      case kOperandFraction:
-        if (isdigit(c)) {
-          op[i++] = c;
-        } else {
-          op[i] = '\0';
-          ungetc(c, stdin);
-          return NUMBER;
-        }
-        break;
-    }
+/* Pops top element on the stack*/
+static inline void Pop(Stack *stack, Element *top) {
+  if (!StackPop(stack, top)) {
+    printf("Error: empty stack.");
+    exit(-1);
   }
-  return EOF;
+}
+
+/* Pushed an element on the stack */
+static inline void Push(Stack *stack, Element *top) {
+  if (!StackPush(stack, top)) {
+    printf("Error: memory overflow!");
+    exit(-1);
+  }
 }
 
 /* Checks string operand for supported math functions */
-void MathFunc(Stack *stack, char func[]) {
+static inline void MathFunc(Stack *stack, char func[]) {
   double op;
 
-  StackPop(stack, &op);
+  Pop(stack, &op);
   if (strcmp(func, "sin") == 0) {
     op = sin(op);
   } else if (strcmp(func, "cos") == 0) {
@@ -131,13 +44,15 @@ void MathFunc(Stack *stack, char func[]) {
     op = exp(op);
   } else if (strcmp(func, "pow") == 0) {
     double op2;
-    StackPop(stack, &op2);
+    Pop(stack, &op2);
     op = pow(op2, op);
   } else {
     printf("Error: function %s not supported\n", func);
+    exit(-1);
   }
-  StackPush(stack, &op);
+  Push(stack, &op);
 }
+
 
 /* Reverse Polish calculator */
 int main() {
@@ -155,96 +70,99 @@ int main() {
     variable[i] = 0.0;
   }
 
-  while ((op_type = GetOp(operand)) != EOF) {
+  while ((op_type = GetOpt(operand)) != EOF) {
     switch (op_type) {
       double op;
       case NUMBER:
         op = atof(operand);
-        StackPush(&stack, &op);
+        Push(&stack, &op);
         break;
       case FUNCTION:
         MathFunc(&stack, operand);
         break;
       case '=':
-        StackPop(&stack, &op);
-        StackPop(&stack, &op);
+        Pop(&stack, &op);
         if (var >= 'A' && var <= 'Z') {
           variable[var - 'A'] = op; 
         } else {
           printf("Error: not valid variable name\n");
+          exit(-1);
         }
         break;
       case '+':
-        StackPop(&stack, &op);
-        StackPop(&stack, &op2);
+        Pop(&stack, &op);
+        Pop(&stack, &op2);
         op = op + op2;
-        StackPush(&stack, &op);
+        Push(&stack, &op);
         break;
       case '-':
-        StackPop(&stack, &op);
-        StackPop(&stack, &op2);
+        Pop(&stack, &op);
+        Pop(&stack, &op2);
         op = op2 -  op;
-        StackPush(&stack, &op);
+        Push(&stack, &op);
         break;
       case '*':
-        StackPop(&stack, &op);
-        StackPop(&stack, &op2);
+        Pop(&stack, &op);
+        Pop(&stack, &op2);
         op = op2 * op;
-        StackPush(&stack, &op);
+        Push(&stack, &op);
         break;
       case '/':
-        StackPop(&stack, &op);
-        StackPop(&stack, &op2);
+        Pop(&stack, &op);
+        Pop(&stack, &op2);
         if (op != 0.0) {
           op = op2 / op;
-          StackPush(&stack, &op);
+          Push(&stack, &op);
         } else {
           printf("Error: zero divisor\n");
+          exit(-1);
         }
         break;
       case '%':
-        StackPop(&stack, &op);
-        StackPop(&stack, &op2);
+        Pop(&stack, &op);
+        Pop(&stack, &op2);
         if (op != 0.0) {
           op = fmod(op2, op);
-          StackPush(&stack, &op);
+          Push(&stack, &op);
         } else {
           printf("Error: zero divisor\n");
+          exit(-1);
         }
         break;
       case '\n':
-        StackPop(&stack, &op);
+        Pop(&stack, &op);
         v = op;
         printf("%.8f\n", op);
         break;
       case '?': /* Prints top element of the stack */
-        StackPop(&stack, &op);
+        Pop(&stack, &op);
         printf("%.8f\n", op);
-        StackPop(&stack, &op);
+        Pop(&stack, &op);
         break;
       case 'c': /* Clear the stack */
         StackClear(&stack);
         break;
       case 'd': /* Duplicates tope elements of the stack */
-        StackPop(&stack, &op);
-        StackPush(&stack, &op);
-        StackPush(&stack, &op);
+        Pop(&stack, &op);
+        Push(&stack, &op);
+        Push(&stack, &op);
         break;
       case 's': /* Swaps the top two elements */
-        StackPop(&stack, &op);
-        StackPop(&stack, &op2);
-        StackPush(&stack, &op);
-        StackPush(&stack, &op2);
+        Pop(&stack, &op);
+        Pop(&stack, &op2);
+        Push(&stack, &op);
+        Push(&stack, &op2);
         break;
       case 'v':
-        StackPush(&stack, &v);
+        Push(&stack, &v);
         break;
       default:
         if (op_type >= 'A' && op_type <= 'Z') {
           var = op_type;
-          StackPush(&stack, variable + op_type - 'A');
+          Push(&stack, variable + op_type - 'A');
         } else {
           printf("Error: unknown command \n");
+          exit(-1);
         }
         break;
     }

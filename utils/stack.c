@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-const int kOverflow = -2;
 const int kOk = 1;
 const int kError = 0;
 
@@ -12,16 +11,15 @@ int StackInit(Stack *s, int init_size) {
   s->base_ = malloc(sizeof(Element) * init_size);
   if (!s->base_) {
     // Out of memory
-    exit(kOverflow);
+   return kError;
   }
   s->top_ = s->base_;
   s->size_ = init_size;
   return kOk;
 }
 
-int StackDestroy(Stack *s) {
+void StackDestroy(Stack *s) {
   free(s->base_);
-  return 1;
 }
 
 void StackClear(Stack *s) {
@@ -42,7 +40,7 @@ int StackPush(Stack *s, Element *element) {
     s->base_ = realloc(s->base_,
                        (s->size_ + kIncrementSize) * sizeof(Element));
     if (!s->base_) {
-      exit(kOverflow);
+      return kError;
     }
     s->top_ = s->base_ + s->size_;
     s->size_ += kIncrementSize;

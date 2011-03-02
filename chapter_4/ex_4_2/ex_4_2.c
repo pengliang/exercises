@@ -1,13 +1,15 @@
 #include <ctype.h>
+#include <math.h>
 
-// Convert string s to double. It can handle scientific notation
+// Converts string s to double. It can handle scientific notation
 // of the form 123.45e-6, where a floating-point number may be followed
 // by e or E and an optionally signed exponent.
 //
-// @param s, string buffer.
-double String2Double(char s[]) {
-  double val = 0.0 , power = 0.0;
-  int exp = 0, i = 0, sign = 1;
+// @param s string buffer.
+// @return the double value converted from string
+double String2Double(const char *s) {
+  double val = 0.0;
+  int exp = 0, power = 0, i = 0, sign = 1;
 
   // Skip white space
   for (i = 0; isspace(s[i]); ++i) {}
@@ -23,11 +25,11 @@ double String2Double(char s[]) {
   if (s[i] == '.') {
     ++i;
   }
-  for (power = 1.0; isdigit(s[i]); ++i) {
+  for (power = 0; isdigit(s[i]); ++i) {
     val = 10.0 * val + (s[i] - '0');
-    power *= 10.0;
+    ++power;
   }
-  val = sign * val / power;
+  val = sign * val;
 
   if (s[i] == 'e' || s[i] == 'E') {
     sign = (s[++i] == '-') ? -1 : 1;
@@ -37,15 +39,7 @@ double String2Double(char s[]) {
     for (exp = 0; isdigit(s[i]); ++i) {
       exp = 10 * exp + (s[i] - '0');
     }
-    if (sign == 1) {
-      while (exp-- > 0) {
-        val *= 10;
-      }
-    } else {
-      while (exp-- > 0) {
-        val /= 10;
-      }
-    }
+    val *= pow(10.0, sign * exp - power);
   }
   return val;
 }

@@ -11,3 +11,15 @@ void Reverse(char s[], int i, int len) {
     Reverse(s, ++i, len);
   }
 }
+
+/* Another version */
+void Reverse2(char *s, int begin, int end) {
+  int temp;
+
+  if (begin < end) {
+    temp = s[begin];
+    s[begin] = s[end];
+    s[end] = temp;
+    Reverse2(s, ++begin, --end);
+  }
+}

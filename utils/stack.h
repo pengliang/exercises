@@ -29,17 +29,14 @@ extern const int kError;
 //
 // @param self the stack object's address.
 // @param init_size the stack's init size.
-// @return kOk for success,
-//         kOverflow for memory overflow and
-//         kError for something other error.
+// @return 1 for success,
+//         0 for memory overflow
 int StackInit(Stack *self, int init_size);
 
 // Destroys a stack object.
 //
 // @param self the stack object's address.
-// @return kOk for success,
-//         kError for something error.
-int StackDestroy(Stack *self);
+void StackDestroy(Stack *self);
 
 // Clear a stack
 // @param self the stack object's address.
@@ -49,17 +46,16 @@ void StackClear(Stack *self);
 //
 // @param self stack address.
 // @param c the element will bu pushed.
-// @return kOk for success,
-//         kOverflow for memory overflow and
-//         kError for something other error.
+// @return 1 for success,
+//         0 for memory overflow
 int StackPush(Stack *self, Element *c);
 
 // Pops the element on the top of stack out.
 //
 // @param self stack address.
 // @param[out] c the address to store the element pop out.
-// @return kOk for success,
-//         kError for something error.
+// @return 1 for success,
+//         0 for empty stack.
 int StackPop(Stack *self, Element *c);
 
 // Returns a stack is empty or not.

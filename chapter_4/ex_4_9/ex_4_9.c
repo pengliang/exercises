@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define Buf_Size 100
+#define BUF_SIZE 100
 
 // buffer for ungetc, using integer array for EOF
-static int buf[Buf_Size];
+static int buf[BUF_SIZE];
 // next free position in buf
 static int bufp = 0;
 
@@ -15,7 +15,7 @@ int getch() {
 
 /* Pushes a character back onto the input */
 void ungetch(int c) {
-  if (bufp >= Buf_Size) {
+  if (bufp >= BUF_SIZE) {
     printf("ungetch: too many characters\n");
   } else {
     buf[bufp++] = c;
