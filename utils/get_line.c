@@ -31,9 +31,7 @@ int GetLine(char **line_buf, int line_buf_length) {
     if (line_length < line_buf_length) {
       *((*line_buf) + buf_index) = current_char;
       ++buf_index;
-    }
-    else
-    {
+    } else {
       line_buf_length *= 2;
       *line_buf = realloc(*line_buf, line_buf_length * sizeof(*line_buf));
       *((*line_buf) + buf_index) = current_char;
@@ -53,4 +51,3 @@ int GetLine(char **line_buf, int line_buf_length) {
   }
   return line_length;
 }
-

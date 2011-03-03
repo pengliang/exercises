@@ -5,6 +5,7 @@
  *
  * @param s
  * @param lim max length of input can be read
+ * @return the len read from input
  */
 int GetLine(char *s, int lim) {
   int c;

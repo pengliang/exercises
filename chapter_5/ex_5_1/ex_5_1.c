@@ -4,7 +4,7 @@
 enum PaserState {
   kStart,
   kSign,
-  kInteger,
+  kInteger
 };
 
 /* Gets the next integer from input into *pn

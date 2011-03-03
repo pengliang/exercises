@@ -1,12 +1,18 @@
-/* Concatenates t to the end of s.
- * Assume the space was allocated enough.
+/* Appends the src string to the dest string,
+ * overwriting the null byte ('\0') at the end of dest,
+ * and then adds a terminating null byte.
+ * The strings may not overlap, and the dest string
+ * must have enough space for the result.
  *
- * @param s
- * @param t
+ * @param dest string
+ * @param src string
+ * @return a pointer to the resulting string dest.
  */
-void strcat(char *s, char *t) {
-  while (*s) {
-    s++;
+char *strcat(char *dest, const char *src) {
+  char *result = dest;
+  while (*dest) {
+    dest++;
   };
-  while (*s++ = *t++);
+  while (*dest++ = *src++);
+  return result;
 }

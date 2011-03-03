@@ -1,4 +1,4 @@
-/* Check if string t occurs at the end of string s
+/* Checks if string t occurs at the end of string s
  *
  * @param s
  * @param t
