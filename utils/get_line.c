@@ -1,4 +1,5 @@
 #include "get_line.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -50,4 +51,23 @@ int GetLine(char **line_buf, int line_buf_length) {
     *line_buf[buf_index] = '\0';
   }
   return line_length;
+}
+
+int GetLines(char *line_ptr[], int max_lines) {
+  int temp_buf_len = 100;
+  char *line_buf = malloc(sizeof(char) * temp_buf_len);
+  int len = 0, nlines = 0;
+  char *p;
+
+  while ((len = GetLine(&line_buf, 100)) > 0) {
+    if (nlines > max_lines) {
+      return -1;
+    }
+    if ((p = malloc(sizeof(char) * len)) == NULL) {
+      return -2;
+    }
+    memcpy(p, line_buf, len);
+    line_ptr[nlines++] = p;
+  }
+  return nlines;
 }
