@@ -39,7 +39,7 @@ int StringToInteger(char *s) {
 
   enum PaserState state = kStart;
 
-  while (*s++ != '\0') {
+  while (*s != '\0') {
     switch (state) {
       case kStart:
         if (isdigit(*s)) {
@@ -69,6 +69,7 @@ int StringToInteger(char *s) {
         }
         break;
     }
+    ++s;
   }
   return n * sign;
 }
@@ -101,5 +102,5 @@ void IntegerToString(int n, char *s) {
     *s++ = '-';
   }
   *s = '\0';
-  StringReverse(s, s - bs);
+  StringReverse(bs, s - bs);
 }
