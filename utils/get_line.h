@@ -1,5 +1,5 @@
-#ifndef K_AND_R_ASSIGNMENTS_UTILS_GET_LINE_H_
-#define K_AND_R_ASSIGNMENTS_UTILS_GET_LINE_H_
+#ifndef EXERCISES_UTILS_GET_LINE_H_
+#define EXERCISES_UTILS_GET_LINE_H_
 
 // Reads a limited length line from the standard input.
 // If the user's input is ended with line-feed '\n',
@@ -34,4 +34,4 @@ int GetLine(char **line_buf_point, int line_buf_length);
 //         -2 for memory overflow
 int GetLines(char *line_ptr[], int max_lines);
 
-#endif  // K_AND_R_ASSIGNMENTS_UTILS_GET_LINE_H_
+#endif // EXERCISES_UTILS_GET_LINE_H_
