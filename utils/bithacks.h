@@ -60,6 +60,7 @@
 
 /*
  * find the position of the first 0 in a 8-bit array
+ * Notice: only intel x86 serial cpu have 'bsfl' command
  */
 inline unsigned short find_first_zero(uint8_t bit_array)
 {
