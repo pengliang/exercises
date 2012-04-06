@@ -61,6 +61,19 @@
 /*
  * find the position of the first 0 in a 8-bit array
  * Notice: only intel x86 serial cpu have 'bsfl' command
+ *
+ * Another algorithm
+ *  1. Invert the number
+ *  2. Compute the two's complement of the inverted number
+ *  3. AND the results of (1) and (2)
+ *  4. Find the position by computing the binary logarithm of (3)
+   e.x.
+   For the number 10110111
+
+    01001000
+    10111000
+    01001000 AND 10111000 = 00001000
+    log2(00001000) = 3
  */
 inline unsigned short find_first_zero(uint8_t bit_array)
 {
